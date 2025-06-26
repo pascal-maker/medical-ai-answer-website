@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  name      String?
+  role      Role      @default(STUDENT)
+  attempts  Attempt[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+model Question {
+  id          String     @id @default(uuid())
+  stem        String
+  choices     String[]
+  answer      Int
+  explanation String
+  tags        String[]
+  difficulty  Difficulty @default(MEDIUM)
+  exams       Exam[]     @relation("ExamQuestions")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Exam {
+  id        String     @id @default(uuid())
+  title     String
+  questions Question[] @relation("ExamQuestions")
+  attempts  Attempt[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Attempt {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  exam      Exam?    @relation(fields: [examId], references: [id])
+  examId    String?
+  score     Int?
+  answers   Json
+  createdAt DateTime @default(now())
+}
