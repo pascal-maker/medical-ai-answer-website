@@ -1,4 +1,4 @@
-# Medical AI Student Answer Website
+# Medical AI Student Answer Website (Vibecoding)
 
 A modern, scalable platform for medical entrance exam preparation, inspired by Asclepia. Built with Next.js, NestJS, and PostgreSQL.
 
